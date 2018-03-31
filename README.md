@@ -54,7 +54,7 @@ https://cloud.google.com/compute/docs/gcloud-compute/
     gke-sandbox-01-default-pool-dabaf260-4x5w  us-central1-a  g1-small                   10.128.0.3   35.188.154.197  RUNNING
     gke-sandbox-01-default-pool-dabaf260-tjfs  us-central1-a  g1-small                   10.128.0.2   35.225.226.39   RUNNING
     0587365031:docker csev$ gcloud compute instances describe gke-sandbox-01-default-pool-dabaf260-4x5w
-  
+
     $ gcloud compute instances describe gke-sandbox-01-default-pool-dabaf260-4x5w --zone us-central1-a
     canIpForward: true
     ...
@@ -84,4 +84,9 @@ https://cloud.google.com/compute/docs/gcloud-compute/
 
     $ gcloud container images delete us.gcr.io/sandbox-199519/tsugi_mysql:latest
 
+YML
+
+    $ kubectl create -f mysql.yml
+
+    $ kubectl delete -f mysql.yml
 

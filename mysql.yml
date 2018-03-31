@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: mysql
   labels:
-    purpose: Test MySQL 
+    purpose: test-mysql
 spec:
   containers:
   - name: envar-demo-container
