@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dev
+  labels:
+    purpose: Test Test 
+spec:
+  containers:
+  - name: envar-demo-container
+    image: us.gcr.io/sandbox-199519/tsugi_dev:latest
+    env:
+    - name: TSUGI_SERVICENAME
+      value: "TSFUN"
+    - name: WAIT_FOREVER
+      value: "Yes"
+

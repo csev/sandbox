@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test
+spec:
+  rules:
+  - host: dev.lrnxp.net
+    http:
+      paths:
+      - backend:
+          serviceName: dev
+          servicePort: 80
+  - host: nightly.lrnxp.net
+    http:
+      paths:
+      - backend:
+          serviceName: nightly
+          servicePort: 80
+
