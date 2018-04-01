@@ -76,6 +76,14 @@ Double check nothing running...
     cs-apache    LoadBalancer   10.51.255.154   35.192.51.116   80:31105/TCP   1m
     kubernetes   ClusterIP      10.51.240.1     <none>          443/TCP        54m
 
+    $ kubectl get pods
+    NAME                        READY     STATUS    RESTARTS   AGE
+    cs-apache-86b76c695-xsdzg   1/1       Running   0          11m
+
+    $ kubectl exec -it cs-apache-86b76c695-xsdzg -- /bin/bash
+    root@cs-apache-86b76c695-xsdzg:/var/www/html# ls
+    index.html
+
     $ kubectl delete service cs-apache
     service "cs-apache" deleted
 
