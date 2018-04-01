@@ -65,17 +65,42 @@ https://cloud.google.com/compute/docs/gcloud-compute/
 
     $ gcloud compute ssh gke-sandbox-01-default-pool-dabaf260-4x5w --zone us-central1-a
 
+https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
 
     $ kubectl run mysql --image=us.gcr.io/sandbox-199519/tsugi_mysql:latest --port 80 --env="TSUGI_SERVICENAME=TSFUN" --env="WAIT_FOREVER=Yes"
+    $ kubectl run base --image=us.gcr.io/sandbox-199519/tsugi_base:latest --port 80 --env="TSUGI_SERVICENAME=TSFUN" --env="WAIT_FOREVER=Yes"
 
     $ kubectl get pods
     NAME                  READY     STATUS              RESTARTS   AGE
     mysql-9b7666dc4-gf9hs   0/1       ContainerCreating   0          20s
 
-
     $ kubectl logs -f mysql-9b7666dc4-gf9hs
 
     $ kubectl exec -it base -- /bin/bash
+
+    # There was an old deployment running
+    $ kubectl get service
+    NAME         TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)   AGE
+    kubernetes   ClusterIP   10.51.240.1   <none>        443/TCP   2d
+
+    $ kubectl delete service kubernetes
+    service "kubernetes" deleted
+
+    $ kubectl get deployments
+    NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+    base      1         1         1            1           5m
+
+    $ gcloud compute forwarding-rules list
+    Listed 0 items.
+
+    $ kubectl expose deployment base --type=LoadBalancer --port 80 --target-port 8080
+
+    $ kubectl get service
+    NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)        AGE
+    base         LoadBalancer   10.51.248.158   23.236.48.44   80:30385/TCP   1m
+    kubernetes   ClusterIP      10.51.240.1     <none>         443/TCP        4m
+
+Deleting
 
     $ kubectl get deployments
     NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
@@ -88,6 +113,7 @@ https://cloud.google.com/compute/docs/gcloud-compute/
     $ kubectl get pods
     No resources found.
 
+    $ gcloud container images list us.gcr.io/sandbox-199519/tsugi_mysql
     $ gcloud container images delete us.gcr.io/sandbox-199519/tsugi_mysql:latest
 
 YML
@@ -99,3 +125,6 @@ YML
 Ingress
 
     $ kubectl get ing
+
+
+
