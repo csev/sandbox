@@ -69,6 +69,7 @@ https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
 
     $ kubectl run mysql --image=us.gcr.io/sandbox-199519/tsugi_mysql:latest --port 80 --env="TSUGI_SERVICENAME=TSFUN" --env="WAIT_FOREVER=Yes"
     $ kubectl run base --image=us.gcr.io/sandbox-199519/tsugi_base:latest --port 80 --env="TSUGI_SERVICENAME=TSFUN" --env="WAIT_FOREVER=Yes"
+    $ kubectl run dev --image=us.gcr.io/sandbox-199519/tsugi_dev:latest --port 80 --env="TSUGI_SERVICENAME=TSFUN" --env="WAIT_FOREVER=Yes"
 
     $ kubectl get pods
     NAME                  READY     STATUS              RESTARTS   AGE
@@ -93,7 +94,8 @@ https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
     $ gcloud compute forwarding-rules list
     Listed 0 items.
 
-    $ kubectl expose deployment base --type=LoadBalancer --port 80 --target-port 8080
+    $ kubectl expose deployment base --type=LoadBalancer --port 80 --target-port 80
+    $ kubectl expose deployment dev --type=LoadBalancer --port 80 --target-port 80
 
     $ kubectl get service
     NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)        AGE
