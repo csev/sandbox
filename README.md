@@ -1,4 +1,4 @@
-
+base
 Check my docker images
 
   $ docker images
@@ -30,9 +30,13 @@ https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
 
 https://cloud.google.com/container-registry/docs/pushing-and-pulling
 
+    docker tag tsugi_base:latest us.gcr.io/sandbox-199519/tsugi_base:latest
     docker tag tsugi_mysql:latest us.gcr.io/sandbox-199519/tsugi_mysql:latest
+    docker tag tsugi_dev:latest us.gcr.io/sandbox-199519/tsugi_dev:latest
 
+    gcloud docker -- push us.gcr.io/sandbox-199519/tsugi_base:latest
     gcloud docker -- push us.gcr.io/sandbox-199519/tsugi_mysql:latest
+    gcloud docker -- push us.gcr.io/sandbox-199519/tsugi_dev:latest
 
     gcloud container images list-tags us.gcr.io/sandbox-199519/tsugi_mysql
     DIGEST        TAGS  TIMESTAMP
@@ -71,6 +75,8 @@ https://cloud.google.com/compute/docs/gcloud-compute/
 
     $ kubectl logs -f mysql-9b7666dc4-gf9hs
 
+    $ kubectl exec -it base -- /bin/bash
+
     $ kubectl get deployments
     NAME      DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
     mysql       1         1         1            0           1h
@@ -90,3 +96,6 @@ YML
 
     $ kubectl delete -f mysql.yml
 
+Ingress
+
+    $ kubectl get ing

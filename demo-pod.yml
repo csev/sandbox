@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-pod
+  labels:
+    purpose: test-chuck-containers
+spec:
+  containers:
+  - name: base
+    image: us.gcr.io/sandbox-199519/tsugi_base:latest
+    env:
+    - name: TSUGI_SERVICENAME
+      value: "TSFUN"
+    - name: WAIT_FOREVER
+      value: "Yes"
+

@@ -4,16 +4,9 @@ metadata:
   name: test
 spec:
   rules:
-  - host: dev.lrnxp.net
+  - host: base.lrnxp.com
     http:
       paths:
       - backend:
-          serviceName: dev
+          serviceName: base
           servicePort: 80
-  - host: nightly.lrnxp.net
-    http:
-      paths:
-      - backend:
-          serviceName: nightly
-          servicePort: 80
-
