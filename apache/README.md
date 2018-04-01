@@ -1,4 +1,8 @@
 
+My First Apache on Kubernetes
+-----------------------------
+
+I got a lot of inspiration from https://github.com/profmikegreene/kechirase-los-lobos/tree/master/tsugi
 
     $ docker build --tag cs_apache .
 
