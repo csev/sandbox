@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: dev
   labels:
-    run: dev
+    app: dev
 spec:
   ports:
   - name: http
@@ -13,4 +13,4 @@ spec:
     protocol: TCP
   type: NodePort
   selector:
-    run: dev
+    app: dev

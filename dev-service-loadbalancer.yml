@@ -2,13 +2,17 @@ apiVersion: v1
 kind: Service
 metadata:
   name: dev
+#  annotations:
+#    cloud.google.com/load-balancer-type: "Internal"
   labels:
-    run: dev
+    app: dev
 spec:
+  type: LoadBalancer
   ports:
   - port: 80
     targetPort: 80
     protocol: TCP
-  type: LoadBalancer
   selector:
-    run: dev
+    app: dev
+
+# https://cloud.google.com/kubernetes-engine/docs/how-to/internal-load-balancing

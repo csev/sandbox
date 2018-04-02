@@ -19,7 +19,7 @@ spec:
         image: us.gcr.io/sandbox-199519/tsugi_dev:latest
         env:
         - name: TSUGI_WWWROOT
-          value: "https://dev.lrnxp.net"
+          value: "https://dev.lrnxp.net/tsugi"
         - name: TSUGI_SERVICENAME
           value: "TSFUN"
         - name: WAIT_FOREVER
