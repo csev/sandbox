@@ -9,9 +9,8 @@ spec:
   - name: http
     port: 80
     targetPort: 80
-#   nodePort: 30036
+    nodePort: 30036
     protocol: TCP
-  type: LoadBalancer
-# type: NodePort
+  type: NodePort
   selector:
     run: dev
