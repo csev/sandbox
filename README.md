@@ -32,30 +32,76 @@ https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
 
     $ kubectl exec -it dev-5dd65fbb76-9c6ss -- /bin/bash
 
-    # Service Fail #1 - Can't even talk to the LB address
-    $ kubectl create -f service-dev-loadbalancer.yml
+Expose Using NodePort
+---------------------
 
-    # Service Fail #2 - Had no address, ingress does not work
-    $ kubectl expose deployment dev --type=NodePort --port 80 --target-port 80
+The service is not exposed at all.
 
-    # Service Success - Works for direct IP and ingress IP (behind cloudflare)
-    $ kubectl expose deployment dev --type=LoadBalancer --port 80 --target-port 80
+Be patient when these come up - leave 2 minutes before trying things
+You must do a POST to the https://dev.lrnxp.com through CloudFlare
 
-    $ kubectl get services
-    NAME         TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)        AGE
-    dev          LoadBalancer   10.51.249.6     35.188.25.102   80:30406/TCP   40s
-    kubernetes   ClusterIP      10.51.240.1     <none>          443/TCP        13h
-
-    # Can navigate to http://35.188.25.102
-
-    $ kubectl create -f dev-ingress.yml
+    $ kubectl create -f dev-service-nodeport.yml 
+    service "dev" created
+    $ kubectl create -f dev-ingress.yml 
     ingress "test" created
-
+    $ kubectl get service
+    NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)        AGE
+    dev          NodePort       10.51.252.104   <none>         80:30036/TCP   8m
+    kubernetes   ClusterIP      10.51.240.1     <none>         443/TCP        1d
     $ kubectl get ing
     NAME      HOSTS           ADDRESS          PORTS     AGE
-    test      dev.lrnxp.net   35.186.244.105   80        1m
+    test      dev.lrnxp.net   35.186.244.105   80        2m
 
-    # Can navigate to https://dev.lrnxp.net  (via cloudflare after DNS setup)
+Expose Using Local LoadBalancer
+-------------------------------
+
+The service is not exposed at all.
+
+Be patient when these come up - leave 2 minutes before trying things
+You must do a POST to the https://dev.lrnxp.com through CloudFlare
+
+    $ kubectl create -f dev-service-nodeport.yml 
+    service "dev" created
+    $ kubectl create -f dev-ingress.yml 
+    ingress "test" created
+    $ kubectl get service
+    NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)        AGE
+    dev          LoadBalancer   10.51.247.24    10.128.0.6     80:31755/TCP   2m
+    kubernetes   ClusterIP      10.51.240.1     <none>         443/TCP        1d
+    $ kubectl create dev-ingress.yml 
+    error: unknown command "dev-ingress.yml"
+    See 'kubectl create -h' for help and examples.
+    $ kubectl create -f dev-ingress.yml 
+    ingress "test" created
+    $ kubectl get ing
+    NAME      HOSTS           ADDRESS          PORTS     AGE
+    test      dev.lrnxp.net   35.186.212.164   80        10m
+
+Expose Using External LoadBalancer
+----------------------------------
+
+The service gets an external IP.
+
+Be patient when these come up - leave 2 minutes before trying things
+You must do a POST to the https://dev.lrnxp.com through CloudFlare
+
+    $ kubectl create -f dev-service-loadbalancer.yml 
+    service "dev" created
+    $ kubectl get service
+    NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)        AGE
+    dev          LoadBalancer   10.51.247.24    10.128.0.6     80:31755/TCP   2m
+    kubernetes   ClusterIP      10.51.240.1     25.141.16.12   443/TCP        1d
+
+    $ kubectl create -f dev-ingress.yml 
+    ingress "test" created
+    $ kubectl get ing
+    NAME      HOSTS           ADDRESS          PORTS     AGE
+    test      dev.lrnxp.net   35.186.244.105   80        9m
+
+You can use the ingress address in CloudFlare or the LoadBalancer address directly 
+to the service.
+
+http://25.141.16.12
 
 Make a new version, build, retag, and push the container up to Google
 
