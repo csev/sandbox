@@ -1,0 +1,26 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: dev
+  labels:
+    app: dev
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dev
+  template:
+    metadata:
+      labels:
+        app: dev
+    spec:
+      containers:
+      - name: dev
+        image: us.gcr.io/sandbox-199519/tsugi_dev:latest
+        env:
+        - name: TSUGI_SERVICENAME
+          value: "TSFUN"
+        - name: WAIT_FOREVER
+          value: "Yes"
+        ports:
+        - containerPort: 80
