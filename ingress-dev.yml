@@ -4,7 +4,7 @@ metadata:
   name: test
 spec:
   rules:
-  - host: dev.lrnxp.com
+  - host: dev.lrnxp.net
     http:
       paths:
       - backend:

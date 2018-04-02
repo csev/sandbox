@@ -1,4 +1,4 @@
-base
+uase
 Check my docker images
 
   $ docker images
@@ -94,13 +94,30 @@ https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
     $ gcloud compute forwarding-rules list
     Listed 0 items.
 
+https://cloud.google.com/kubernetes-engine/docs/tutorials/http-balancer
+
     $ kubectl expose deployment base --type=LoadBalancer --port 80 --target-port 80
     $ kubectl expose deployment dev --type=LoadBalancer --port 80 --target-port 80
+    $ kubectl expose deployment dev --type=NodePort --port 80 --target-port 80
 
-    $ kubectl get service
+    $ kubectl get services
     NAME         TYPE           CLUSTER-IP      EXTERNAL-IP    PORT(S)        AGE
-    base         LoadBalancer   10.51.248.158   23.236.48.44   80:30385/TCP   1m
-    kubernetes   ClusterIP      10.51.240.1     <none>         443/TCP        4m
+    cs-apache    LoadBalancer   10.51.254.247   35.192.51.92   80:30674/TCP   9h
+    dev          NodePort       10.51.253.213   <none>         80:31518/TCP   34s
+    kubernetes   ClusterIP      10.51.240.1     <none>         443/TCP        10h
+
+    # Will take up to 5 minutes
+    $ kubectl apply -f ingress-dev.yml
+
+    $ kubectl get ingress
+    NAME      HOSTS           ADDRESS   PORTS     AGE
+    test      dev.lrnxp.net             80        23s
+
+    $ kubectl get ingress
+    NAME      HOSTS           ADDRESS        PORTS     AGE
+    test      dev.lrnxp.net   35.190.9.169   80        1m
+
+
 
 Deleting
 
