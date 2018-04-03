@@ -9,6 +9,8 @@ https://cloud.google.com/container-registry/docs/pushing-and-pulling
     DIGEST        TAGS  TIMESTAMP
     97c32f87376e  latest  2018-03-22T00:17:31
 
+    $ gcloud container images list --repository us.gcr.io/sandbox-199519
+
 Cleanup
 
     $ kubectl delete ing test

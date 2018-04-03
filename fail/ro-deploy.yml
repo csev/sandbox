@@ -1,0 +1,38 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: apache-ro
+  labels:
+    app: apache-ro
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: apache-ro
+  # https://tachingchen.com/blog/kubernetes-rolling-update-with-deployment/
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: apache-ro
+    spec:
+      containers:
+      - name: apache-ro
+        image: us.gcr.io/sandbox-199519/cs_apache:latest
+        ports:
+        - containerPort: 80
+# https://cloud.google.com/kubernetes-engine/docs/tutorials/persistent-disk
+        volumeMounts:
+          - name: cs-mount
+            mountPath: /tmp/bob
+            readOnly: true
+      volumes:
+      - name: cs-mount
+        gcePersistentDisk:
+          pdName: dev-disk2
+          fsType: ext4
+          readOnly: true
