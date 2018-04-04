@@ -28,7 +28,5 @@ spec:
           value: "https://dev.lrnxp.net/tsugi"
         - name: TSUGI_SERVICENAME
           value: "TSFUN"
-        - name: WAIT_FOREVER
-          value: "Yes"
         ports:
         - containerPort: 80
