@@ -1,0 +1,19 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: test
+# https://kubernetes.io/docs/concepts/services-networking/ingress/
+spec:
+  rules:
+  - host: dev.lrnxp.net
+    http:
+      paths:
+      - backend:
+          serviceName: dev
+          servicePort: 80
+  - host: tsugi.lrnxp.net
+    http:
+      paths:
+      - backend:
+          serviceName: tsugi
+          servicePort: 80

@@ -1,14 +1,15 @@
 apiVersion: extensions/v1beta1
+# kubectl create secret generic tsugi-db-credentials --from-literal=username=ltiuser --from-literal=password=ltipassword
 kind: Deployment
 metadata:
-  name: kube
+  name: tsugi
   labels:
-    app: kube
+    app: tsugi
 spec:
   template:
     metadata:
       labels:
-        app: kube
+        app: tsugi
     spec:
       containers:
         - name: web
@@ -17,34 +18,22 @@ spec:
             - containerPort: 80
           env:
           - name: TSUGI_WWWROOT
-            value: "https://kube.lrnxp.net/tsugi"
+            value: "https://tsugi.lrnxp.net/tsugi"
           - name: TSUGI_SERVICENAME
             value: "TSFUN"
           - name: SETUP_GIT
             value: "true"
-          - name: MYSQL_PDO
-            value: "mysql:host=127.0.0.1;dbname=tsugi"
-          - name: MYSQL_USER
-            valueFrom:
-              secretKeyRef:
-                name: cloudsql-db-credentials
-                key: username
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: cloudsql-db-credentials
-                key: password
           - name: TSUGI_PDO
             value: "mysql:host=127.0.0.1;dbname=tsugi"
           - name: TSUGI_USER
             valueFrom:
               secretKeyRef:
-                name: cloudsql-db-credentials
+                name: tsugi-db-credentials
                 key: username
           - name: TSUGI_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: cloudsql-db-credentials
+                name: tsugi-db-credentials
                 key: password
   
         # Change <INSTANCE_CONNECTION_NAME> here to include your GCP

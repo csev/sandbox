@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: tsugi
+  labels:
+    app: tsugi
+spec:
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    nodePort: 30037
+    protocol: TCP
+  type: NodePort
+  selector:
+    app: tsugi
