@@ -22,18 +22,6 @@ spec:
             value: "TSFUN"
           - name: SETUP_GIT
             value: "true"
-          - name: MYSQL_PDO
-            value: "mysql:host=127.0.0.1;dbname=tsugi"
-          - name: MYSQL_USER
-            valueFrom:
-              secretKeyRef:
-                name: cloudsql-db-credentials
-                key: username
-          - name: MYSQL_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: cloudsql-db-credentials
-                key: password
           - name: TSUGI_PDO
             value: "mysql:host=127.0.0.1;dbname=tsugi"
           - name: TSUGI_USER

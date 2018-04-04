@@ -1,6 +1,18 @@
 apiVersion: extensions/v1beta1
-# kubectl create secret generic tsugi-db-credentials --from-literal=username=ltiuser --from-literal=password=ltipassword
 kind: Deployment
+
+# https://cloud.google.com/kubernetes-engine/docs/tutorials/persistent-disk
+
+# Log into a container with a proxy connection, make an account and database
+# CREATE DATABASE tsugi DEFAULT CHARACTER SET utf8;
+# GRANT ALL ON tsugi.* TO 'ltiuser'@'%' IDENTIFIED BY 'ltipassword';
+
+# Make a secret for that database
+# kubectl create secret generic tsugi-db-credentials --from-literal=username=ltiuser --from-literal=password=ltipassword
+
+# Make the persistent disk
+# gcloud compute disks create --size=10GB --type=pd-ssd --zone=us-central1-a tsugi-www
+
 metadata:
   name: tsugi
   labels:
@@ -35,12 +47,10 @@ spec:
               secretKeyRef:
                 name: tsugi-db-credentials
                 key: password
-  
-        # Change <INSTANCE_CONNECTION_NAME> here to include your GCP
-        # project, the region of your Cloud SQL instance and the name
-        # of your Cloud SQL instance. The format is
-        # $PROJECT:$REGION:$INSTANCE
-        # [START proxy_container]
+          volumeMounts:
+            - name: www-mount
+              mountPath: /var/www/html
+        # [END web_container]
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
           command: ["/cloud_sql_proxy",
@@ -50,10 +60,19 @@ spec:
             - name: cloudsql-instance-credentials
               mountPath: /secrets/cloudsql
               readOnly: true
-        # [END proxy_container]
-      # [START volumes]
+        # [END cloudsql_proxy_container]
       volumes:
+        - name: www-mount
+          gcePersistentDisk:
+            pdName: tsugi-www
+            fsType: ext4
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
       # [END volumes]
+
+# Notes:
+
+# gcloud compute disk-types list
+# pd-ssd       us-central1-a              10GB-65536GB
+
