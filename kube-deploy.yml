@@ -16,6 +16,10 @@ spec:
           ports:
             - containerPort: 80
           env:
+          - name: TSUGI_CLUSTER_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
           - name: TSUGI_WWWROOT
             value: "https://kube.lrnxp.net/tsugi"
           - name: TSUGI_SERVICENAME

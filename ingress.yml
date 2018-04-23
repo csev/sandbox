@@ -17,3 +17,9 @@ spec:
       - backend:
           serviceName: tsugi
           servicePort: 80
+  - host: dev.tsugicloud.org
+    http:
+      paths:
+      - backend:
+          serviceName: dev
+          servicePort: 80
