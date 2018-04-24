@@ -34,6 +34,8 @@ https://cloud.google.com/kubernetes-engine/docs/tutorials/hello-app
 
     $ kubectl exec -it dev-5dd65fbb76-9c6ss -- /bin/bash
 
+    $ kubectl exec -it my-pod --container web -- /bin/bash
+
 Expose Using NodePort
 ---------------------
 

@@ -1,0 +1,100 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+
+# https://cloud.google.com/kubernetes-engine/docs/tutorials/persistent-disk
+
+# Log into a container with a proxy connection, make an account and database
+# CREATE DATABASE tsugi DEFAULT CHARACTER SET utf8;
+# GRANT ALL ON tsugi.* TO 'ltiuser'@'%' IDENTIFIED BY 'ltipassword';
+
+# Make a secret for that database
+# kubectl create secret generic tsugi-db-credentials --from-literal=username=ltiuser --from-literal=password=ltipassword
+# kubectl create secret generic tsugi-admin-password --from-literal=password=appstore
+# kubectl create secret generic tsugi-admin-password --from-literal=password=sha256:eaffb3558916...
+
+# Make the persistent disk
+# gcloud compute disks create --size=10GB --type=pd-ssd --zone=us-central1-a nfsdisk
+
+metadata:
+  name: nfstest
+  labels:
+    app: nfstest
+spec:
+  template:
+    metadata:
+      labels:
+        app: nfstest
+    spec:
+      containers:
+        - name: nfs-server
+          image: k8s.gcr.io/volume-nfs:0.8
+          ports:
+            - name: nfs
+              containerPort: 2049
+            - name: mountd
+              containerPort: 20048
+            - name: rpcbind
+              containerPort: 111
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - mountPath: /exports/data
+              name: nfs-volume
+        # [END nfs]
+        - name: web
+          image: us.gcr.io/sandbox-199519/tsugi_kube:latest
+          ports:
+            - containerPort: 80
+          env:
+          - name: SETUP_GIT
+            value: "true"
+          - name: TSUGI_WWWROOT
+            value: "https://tsugi.lrnxp.net/tsugi"
+          - name: TSUGI_SERVICENAME
+            value: "TSFUN"
+          - name: TSUGI_PDO
+            value: "mysql:host=127.0.0.1;dbname=tsugi"
+          - name: TSUGI_USER
+            valueFrom:
+              secretKeyRef:
+                name: tsugi-db-credentials
+                key: username
+          - name: TSUGI_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: tsugi-db-credentials
+                key: password
+          - name: TSUGI_ADMINPW
+            valueFrom:
+              secretKeyRef:
+                name: tsugi-admin-password
+                key: password
+          # volumeMounts:
+            # - name: www-mount
+              # mountPath: /var/www/html
+        # [END web_container]
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy",
+                    "-instances=sandbox-199519:us-central1:sandbox-db-01=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+        # [END cloudsql_proxy_container]
+      volumes:
+        - name: nfs-volume
+          gcePersistentDisk:
+            pdName: nfsdisk
+            fsType: ext4
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+      # [END volumes]
+
+# Notes:
+
+# gcloud compute disk-types list
+# pd-ssd       us-central1-a              10GB-65536GB
+
