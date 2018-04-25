@@ -1,0 +1,48 @@
+# Make the persistent disk
+# gcloud compute disks create --size=10GB --type=pd-ssd --zone=us-central1-a sandbox-www
+# gcloud compute disks create --size=10GB --type=pd-ssd --zone=us-central1-a sandbox-mysql
+
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: sandbox
+  labels:
+    app: sandbox
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sandbox
+  template:
+    metadata:
+      labels:
+        app: sandbox
+    spec:
+      containers:
+      - name: sandbox
+        image: us.gcr.io/sandbox-199519/tsugi_dev:latest
+        env:
+        - name: TSUGI_APPHOME
+          value: "https://sandbox.tsugicloud.org"
+        - name: TSUGI_WWWROOT
+          value: "https://sandbox.tsugicloud.org/tsugi"
+        - name: TSUGI_SERVICENAME
+          value: "TSAND"
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - name: sandbox-mount-www
+            mountPath: /var/www
+          - name: sandbox-mount-mysql
+            mountPath: /var/lib/mysql
+
+      volumes:
+        - name: sandbox-mount-www
+          gcePersistentDisk:
+            pdName: sandbox-www
+            fsType: ext4
+        - name: sandbox-mount-mysql
+          gcePersistentDisk:
+            pdName: sandbox-mysql
+            fsType: ext4
+      # [END volumes]

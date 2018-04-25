@@ -1,4 +1,15 @@
 
+
+gcloud projects list
+
+gcloud config set project sandbox-199519
+
+kubectl config current-context
+kubectl config get-contexts
+
+    kubectl config use-context gke_sandbox-199519_us-central1-a_sandbox-01
+
+
 https://cloud.google.com/container-registry/docs/pushing-and-pulling
 
     $ docker tag tsugi_dev:latest us.gcr.io/sandbox-199519/tsugi_dev:latest
